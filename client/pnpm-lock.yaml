@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@serenity-kit/opaque':
+        specifier: ^1.1.0
+        version: 1.1.0
       react:
         specifier: ^19.2.8
         version: 19.3.0
@@ -312,6 +315,10 @@ packages:
 
   '@rolldown/pluginutils@1.0.1':
     resolution: {integrity: sha512-2j9bGt5Jh8hj+vPtgzPtl72j0yRxHAyumoo6TNfAjsLB04UtpSvPbPcDcBMxz7n+9CYB0c1GxQFxYRg2jimqGw==}
+
+  '@serenity-kit/opaque@1.1.0':
+    resolution: {integrity: sha512-Y6v/+hRMn0MdMEk5+/ArM0vPIiFfFEbdTZc7oAx+cWyvGODGezAQ/sMjXBVogf7NsS9z9EV0Ve5paZCVULuedw==}
+    hasBin: true
 
   '@types/esrecurse@4.3.1':
     resolution: {integrity: sha512-xJBAbDifo5hpffDBuHl0Y8ywswbiAp/Wi7Y/GtAgSlZyIABppyurxVueOPE8LUQOxdlgi6Zqce7uoEpqNTeiUw==}
@@ -1174,6 +1181,8 @@ snapshots:
     optional: true
 
   '@rolldown/pluginutils@1.0.1': {}
+
+  '@serenity-kit/opaque@1.1.0': {}
 
   '@types/esrecurse@4.3.1': {}
 
