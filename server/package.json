@@ -10,7 +10,7 @@
     "lint": "eslint \"src/**/*.{ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{ts,json}\"",
     "check-format": "prettier --check \"src/**/*.{ts,json}\"",
-    "prepare": "husky"
+    "prepare": "cd .. && husky server/.husky"
   },
   "keywords": [
     "OPaque"

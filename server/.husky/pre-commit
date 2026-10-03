@@ -1,13 +1,48 @@
+#!/usr/bin/env sh
 set -e
 
-echo "Checking format (prettier)..."
-npm run check-format
+server_dir="$(cd "$(dirname "$0")/.." && pwd)"
+repo_root="$(cd "$server_dir/.." && pwd)"
+client_dir="$repo_root/client"
 
-echo "Running TypeScript type-check..."
-npx tsc --noEmit
+run_server=1
+run_client=1
 
-echo "Checking lint..."
-npm run lint -- --max-warnings=0
+if git -C "$repo_root" diff --cached --quiet -- server/; then
+  run_server=0
+fi
 
-echo "Building project..."
-npm run build
+if git -C "$repo_root" diff --cached --quiet -- client/; then
+  run_client=0
+fi
+
+if [ "$run_server" -eq 0 ] && [ "$run_client" -eq 0 ]; then
+  echo "No client or server changes staged; skipping pre-commit checks."
+  exit 0
+fi
+
+if [ "$run_server" -eq 1 ]; then
+  cd "$server_dir"
+
+  echo "Checking format (prettier)..."
+  npm run check-format
+
+  echo "Running TypeScript type-check (server)..."
+  npx tsc --noEmit
+
+  echo "Checking lint (server)..."
+  npm run lint -- --max-warnings=0
+
+  echo "Building project..."
+  npm run build
+fi
+
+if [ "$run_client" -eq 1 ]; then
+  cd "$client_dir"
+
+  echo "Running TypeScript type-check (client)..."
+  npx tsc -b --noEmit
+
+  echo "Checking lint (client)..."
+  npm run lint -- --max-warnings=0
+fi
