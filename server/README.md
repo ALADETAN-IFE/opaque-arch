@@ -1,124 +1,104 @@
-# server
+# Opaque Arch Server
 
-A monolithic backend API application.
+Express + TypeScript API for Opaque Arch. It runs the server half of OPAQUE registration and login, stores registration records in SQLite, and authenticates later requests with an `opaque-sid` cookie.
 
-## Architecture
+Git root is the parent folder. See the [root README](../README.md) for running client and server together.
 
-- **Type**: Monolith API
-- **Port**: 4000 (default)
+## Stack
 
-## Tech Stack
+- Node.js, TypeScript, Express 5
+- `@serenity-kit/opaque`
+- better-sqlite3
+- JWT session cookie (`opaque-sid`)
+- CORS (credentials), cookie-parser, Morgan, request IDs
+- Swagger UI at `/api-docs`
 
-- **Runtime**: Node.js
-- **Language**: TypeScript
-- **Framework**: Express.js
-- **Operations**: Environment validation at startup and request tracing headers
-- **Features**:
-  - CORS
-  - Morgan (HTTP logging)
-- **Observability**: Request IDs and HTTP access logs
-- **API Docs**: OpenAPI Swagger UI (/api-docs)
+Default port: **4000**
 
-## Getting Started
+## Setup
 
-### Prerequisites
-
-- Node.js (v18 or higher)
-- npm or yarn
-
-### Installation
-
-1. Clone the repository
 ```bash
 cd server
-```
-
-2. Install dependencies
-```bash
-npm install
-```
-
-3. Set up environment variables
-```bash
 cp .env.example .env
+node src/utils/generate-setup.mjs
+pnpm install
 ```
 
-## Running the Application
-
-### Development
+Put the setup string into `OPAQUE_SERVER_SETUP`. Do not regenerate it in production unless you intend to wipe users.
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-### Production
+Production:
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
-## API Endpoints
+## Environment
+
+| Variable | Description |
+| --- | --- |
+| `PORT` | Listen port (`4000`) |
+| `NODE_ENV` | `development` / `production` |
+| `ALLOWED_ORIGIN` | Browser origin allowed by CORS (`http://localhost:5173`) |
+| `OPAQUE_SERVER_SETUP` | Long-lived OPAQUE server setup string |
+| `JWT_SECRET` | Secret used to sign the session cookie |
+
+Startup fails if any of these are missing.
+
+## Endpoints
 
 Base URL: `http://localhost:4000`
 
-- **GET** `/` - Root endpoint (API info)
-- **GET** `/api/v1/health` - Health check
+| Method | Path | Notes |
+| --- | --- | --- |
+| GET | `/` | API info |
+| GET | `/api/v1/health` | Health check |
+| GET | `/api-docs` | Swagger UI |
+| POST | `/api/v1/auth/signup/start` | Body: `email`, `registrationRequest` |
+| POST | `/api/v1/auth/signup/finish` | Body: `email`, `registrationRecord` |
+| POST | `/api/v1/auth/login/start` | Body: `email`, `startLoginRequest` |
+| POST | `/api/v1/auth/login/finish` | Body: `email`, `finishLoginRequest`. Sets `opaque-sid` |
+| GET | `/api/v1/user/me` | Current user (cookie required) |
+| GET | `/api/v1/user` | All users (cookie required) |
 
-- **GET** `/api-docs` - Interactive Swagger UI
+Example:
 
-### Example Requests
 ```bash
-# Root info
-curl http://localhost:4000/
-
-# Health check
 curl http://localhost:4000/api/v1/health
-
 ```
 
-## Project Structure
+## Scripts
+
+- `npm run dev` — ts-node-dev
+- `npm run build` / `npm start` — compile and run `dist/`
+- `npm run lint` — ESLint on `src/`
+- `npm run format` / `npm run check-format` — Prettier
+- `npm run prepare` — install Husky at the **git root** (`cd .. && husky server/.husky`)
+
+## Pre-commit
+
+`server/.husky/pre-commit` runs from the repo root. Staged `server/` files trigger format, `tsc --noEmit`, lint (`--max-warnings=0`), and build. Staged `client/` files trigger client type-check and lint. Re-run `npm install` in this directory after cloning so `core.hooksPath` is set.
+
+## Layout
 
 ```
 server/
-├── .husky/             # Git hooks
+├── .husky/pre-commit
 ├── src/
-│   ├── config/         # Configuration files
-│   ├── middlewares/    # Custom middlewares
-│   ├── modules/        # Feature modules
-│   │   └── v1/         # API version 1
-│   │       └── health/ # Health check
-│   ├── utils/          # Utility functions
-│   ├── app.ts          # Express app setup
-│   ├── routes.ts       # Route definitions
-│   └── server.ts       # Server entry point
-├── .husky/             # Git hooks
-├── package.json
-└── tsconfig.json
+│   ├── config/          # env, db, OPAQUE setup
+│   ├── middlewares/
+│   ├── modules/v1/      # health, auth, user
+│   ├── utils/           # logger, JWT, generate-setup.mjs
+│   ├── app.ts
+│   ├── routes.ts
+│   └── server.ts
+├── .env.example
+└── package.json
 ```
-
-## Available Scripts
-
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run format` - Run Prettier
-
-## Environment Variables
-
-| Variable | Description | Default |
-| --- | --- | --- |
-| `PORT` | Server port | `4000` |
-| `NODE_ENV` | Environment | `development` |
-| `ALLOWED_ORIGIN` | CORS allowed origin | `http://localhost:3000` |
-
-## About this Scaffold
-
-This project was generated using the @ifecodes/backend-template scaffold. You can recreate or customize this scaffold using the CLI:
-
-- Run without installing (recommended): `npx ifecodes-template`
-- Install globally: `npm i -g @ifecodes/backend-template` and run `ifecodes-template`
 
 ## License
 
