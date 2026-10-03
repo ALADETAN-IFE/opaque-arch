@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login } from "./login.controller";
+import { startSignin, finishSignin } from "./login.controller";
 import { methodNotAllowedHandler } from "@/middlewares";
 
 import { routeRegistry } from "@/docs";
@@ -9,7 +9,7 @@ const router = Router();
 routeRegistry.register({
   method: "POST",
   path: "/api/v1/auth/login",
-  handler: login,
+  handler: startSignin,
   docs: {
     tags: ["Auth"],
     summary: "Login endpoint",
@@ -53,6 +53,7 @@ routeRegistry.register({
 });
 
 router.use(methodNotAllowedHandler(["POST"]));
-router.post("/login", login);
+router.post("/login/start", startSignin);
+router.post("/login/finish", finishSignin);
 
 export default router;

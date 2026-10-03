@@ -34,6 +34,7 @@ export const ENV = {
   ALLOWED_ORIGIN: process.env.ALLOWED_ORIGIN!,
   NODE_ENV: process.env.NODE_ENV!,
   OPAQUE_SERVER_SETUP: process.env.OPAQUE_SERVER_SETUP!,
+  JWT_SECRET: process.env.JWT_SECRET!,
 };
 
 validateEnv(ENV);

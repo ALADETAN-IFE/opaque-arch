@@ -4,6 +4,7 @@ import { errorHandler, observabilityMiddleware } from "@/middlewares";
 import cors from "cors";
 import { ENV } from "@/config";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
@@ -21,6 +22,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(morgan("dev"));
 
 // Connect routes
