@@ -40,7 +40,7 @@ export const completeRegistration = ({
     );
   } catch (error: unknown) {
     const sqliteError = error as { code?: string };
-    console.log(error)
+    console.log(error);
 
     if (sqliteError?.code === "SQLITE_CONSTRAINT_UNIQUE") {
       throw new EmailTakenError("Email is already registered");

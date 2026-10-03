@@ -13,7 +13,8 @@ routeRegistry.register({
   docs: {
     tags: ["Auth"],
     summary: "Start signup",
-    description: "Initializes the OPAQUE registration flow and returns the server registration response.",
+    description:
+      "Initializes the OPAQUE registration flow and returns the server registration response.",
     responses: {
       "200": {
         description: "Successful registration start response",

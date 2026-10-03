@@ -23,7 +23,7 @@ export const startSignin = async (req: Request, res: Response) => {
 
   try {
     const { loginResponse } = startLogin({ email, startLoginRequest });
-    return  res.status(200).json({ status: "success", loginResponse });
+    return res.status(200).json({ status: "success", loginResponse });
   } catch (error) {
     logger.error("Auth/login", "Failed to start login", error);
     res.status(500).json({ status: "error", message: "Internal Server Error" });
@@ -47,7 +47,12 @@ export const finishSignin = async (req: Request, res: Response) => {
       email: normalizedEmail,
       finishLoginRequest,
     });
-    res.cookie("opaque-sid", sessionId, { httpOnly: true, secure: true, sameSite: "lax", maxAge: COOKIE_MAX_AGE_MS });
+    res.cookie("opaque-sid", sessionId, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      maxAge: COOKIE_MAX_AGE_MS,
+    });
     return res.status(200).json({
       status: "success",
       user: { email: normalizedEmail },

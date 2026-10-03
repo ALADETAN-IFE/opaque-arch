@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import { allUsers, findUserByEmail } from "./user.service";
 
 export const getAllUsers = async (_: Request, res: Response) => {
-  try { 
+  try {
     return res.status(200).json({ status: "success", data: allUsers() });
   } catch (error) {
     logger.error("User/getAllUsers", "Error occurred while fetching all users", error);
@@ -28,4 +28,4 @@ export const getOneUser = async (req: Request, res: Response) => {
     logger.error("User/get-one", "Failed to fetch user", error);
     return res.status(500).json({ status: "error", message: "Internal Server Error" });
   }
-}
+};

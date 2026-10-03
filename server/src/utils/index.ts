@@ -13,4 +13,4 @@ export {
 
 export { default as logger } from "./logger";
 
-export { COOKIE_MAX_AGE_MS, generateToken, verifyToken } from "./token"
+export { COOKIE_MAX_AGE_MS, generateToken, verifyToken } from "./token";

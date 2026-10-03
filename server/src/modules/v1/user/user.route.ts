@@ -100,7 +100,6 @@ routeRegistry.register({
   },
 });
 
-
 router.use(methodNotAllowedHandler(["GET"]));
 router.get("/", requireAuth, getAllUsers);
 router.get("/me", requireAuth, getOneUser);

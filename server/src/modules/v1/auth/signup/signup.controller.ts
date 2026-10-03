@@ -10,7 +10,7 @@ import {
 
 export const startSignup = async (req: Request, res: Response) => {
   const { email, registrationRequest } = req.body;
-  logger.info("Auth", "signup-starting")
+  logger.info("Auth", "signup-starting");
 
   if (!email || !registrationRequest) {
     return res.status(400).json({
@@ -37,7 +37,7 @@ export const startSignup = async (req: Request, res: Response) => {
 
 export const finishSignup = async (req: Request, res: Response) => {
   const { email, registrationRecord } = req.body;
-  logger.info("Auth", "signup-finishing")
+  logger.info("Auth", "signup-finishing");
 
   if (!email || !registrationRecord) {
     return res.status(400).json({
@@ -60,7 +60,9 @@ export const finishSignup = async (req: Request, res: Response) => {
     });
   } catch (error) {
     if (error instanceof EmailTakenError) {
-      return res.status(409).json({ status: "error", message: "Email already registered." });
+      return res
+        .status(409)
+        .json({ status: "error", message: "Email already registered." });
     }
     logger.error("Auth/finish-signup", "Failed to complete registration", error);
     return res.status(500).json({ status: "error", message: "Internal Server Error" });

@@ -3,7 +3,7 @@ import { db, getServerSetup } from "@/config";
 import { normalizeEmail } from "../signup/signup.service";
 import { generateToken } from "@/utils/token";
 
-export class LoginError extends Error { }
+export class LoginError extends Error {}
 
 const LOGIN_TTL_MS = 2 * 60 * 1000; // 2 minutes
 
@@ -30,13 +30,11 @@ export const startLogin = ({
     userIdentifier: normEmail,
   });
 
-  db.prepare("INSERT OR REPLACE INTO loginStates (email, serverlogin_states, created_at) VALUES (?, ?, ?)").run(
-    normEmail,
-    serverLoginState,
-    Date.now(),
-  );
+  db.prepare(
+    "INSERT OR REPLACE INTO loginStates (email, serverlogin_states, created_at) VALUES (?, ?, ?)",
+  ).run(normEmail, serverLoginState, Date.now());
 
-  return { loginResponse }
+  return { loginResponse };
 };
 
 export const completeLogin = ({
@@ -62,7 +60,7 @@ export const completeLogin = ({
       serverLoginState: row.serverlogin_states,
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw error;
   }
 
@@ -70,4 +68,3 @@ export const completeLogin = ({
 
   return { sessionId };
 };
-
