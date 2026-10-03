@@ -37,7 +37,7 @@ const Login = () => {
       <form className="flex flex-col gap-4 bg-blue-300 p-8 rounded-lg shadow-md w-md  text-cyan-950">
         <h1 className="text-2xl font-bold text-center">Login</h1>
         <p>Opaque authentication is used to register a new user.</p>
-        {response && <p className={response.type === "success" ? "text-green-500" : "text-red-500"}>{response.message}</p>}
+        {response && <p className={response.type === "success" ? "text-green-900" : "text-red-900"}>{response.message}</p>}
         <div className="flex flex-col gap-4">
           <input
             type="email"

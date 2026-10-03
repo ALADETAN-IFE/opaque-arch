@@ -27,6 +27,24 @@ const post = async (path: string, body: unknown) => {
   }
 };
 
+const get = async (path: string) => {
+  try {
+    const res = await axios.get(`${baseUrl}${path}`, { withCredentials: true });
+    console.log(res)
+    return res.data;
+  } catch (error) {
+    console.error("Error in post request:", error);
+    console.log("Error in post request2:", (error as Error).message);
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return null
+      }
+      throw new Error(error.response?.data?.message ?? "Request failed");
+    }
+    throw error;
+  }
+};
+
 export const register = async (email: string, password: string) => {
   console.log("sign up starting")
   const userEmail = email.trim().toLowerCase()
@@ -65,12 +83,17 @@ export const login = async (email: string, password: string) => {
   console.log("login finishing")
 
   const result = opaque.client.finishLogin({ clientLoginState, loginResponse, password });
-  
+
   if (!result) throw new Error("Wrong email or password");
-  const { finishLoginRequest, sessionKey } = result;
+
+  const { finishLoginRequest } = result;
+
   await post("/api/v1/auth/login/finish", { email: userEmail, finishLoginRequest });
   console.log("login finished")
-  return sessionKey;
 };
 
-
+export const getLoggedinUser = async (): Promise<{ email: string; }> => {
+  const response = await get("/api/v1/user/me");
+  console.log(response.data)
+  return response.data as { email: string };
+}

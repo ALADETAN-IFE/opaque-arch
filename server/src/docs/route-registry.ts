@@ -4,6 +4,7 @@ export interface RouteDoc {
   tags?: string[];
   summary: string;
   description?: string;
+  security?: Array<Record<string, string[]>>;
   parameters?: Array<{
     name: string;
     in: "query" | "path" | "header" | "cookie";
@@ -78,6 +79,7 @@ class RouteRegistry {
         tags: route.docs.tags || [],
         summary: route.docs.summary,
         description: route.docs.description,
+        security: route.docs.security,
         parameters: route.docs.parameters || [],
         requestBody: route.docs.requestBody,
         responses: route.docs.responses,
@@ -96,6 +98,15 @@ class RouteRegistry {
         name: tag,
         description: `${tag} endpoints`,
       })),
+      components: {
+        securitySchemes: {
+          cookieAuth: {
+            type: "apiKey",
+            in: "cookie",
+            name: "opaque-sid",
+          },
+        },
+      },
       paths,
     };
   }
