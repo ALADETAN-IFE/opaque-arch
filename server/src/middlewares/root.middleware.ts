@@ -10,6 +10,9 @@ export const rootHandler = (_req: Request, res: Response) => {
       root: "/",
       health: "/api/v1/health",
       docs: "/api-docs",
+      auth: {
+        signup: "/api/v1/auth/signup",
+      },
     },
   });
 };
